@@ -35,5 +35,14 @@ public class StringCalculatorTest {
         assertEquals(15, result);
     }
 
+    @Test
+    public void should_return_sum_for_various_multiple_numbers(){
+        StringCalculator calculator = new StringCalculator();
+        int result = calculator.add("0,5,0");
+        assertEquals(5, result);
+        result = calculator.add("3,3,3");
+        assertEquals(9, result);
+    }
+
 
 }
