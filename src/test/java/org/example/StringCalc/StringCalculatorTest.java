@@ -20,10 +20,20 @@ public class StringCalculatorTest {
         result = calculator.add("99");
         assertEquals(99, result);
     }
+
     @Test
     public void should_return_sum_for_two_numbers(){
         StringCalculator calculator = new StringCalculator();
         int result = calculator.add("1,9");
         assertEquals(10, result);
     }
+
+    @Test
+    public void should_return_sum_for_multiple_numbers(){
+        StringCalculator calculator = new StringCalculator();
+        int result = calculator.add("1,2,3,4,5");
+        assertEquals(15, result);
+    }
+
+
 }
