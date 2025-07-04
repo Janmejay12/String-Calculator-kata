@@ -9,5 +9,15 @@ public class StringCalculatorTest {
         StringCalculator calculator = new StringCalculator();
         int result = calculator.add("");
         assertEquals(0, result);
-        }
+    }
+    @Test
+    public void should_return_number_for_single_number(){
+        StringCalculator calculator = new StringCalculator();
+        int result = calculator.add("1");
+        assertEquals(1, result);
+        result = calculator.add("9");
+        assertEquals(9, result);
+        result = calculator.add("99");
+        assertEquals(99, result);
+    }
 }
