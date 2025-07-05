@@ -68,7 +68,10 @@ public class StringCalculator {
     private int calculateSum(String[] numberArray) {
         int sum = 0;
         for (String number : numberArray) {
-            sum += Integer.parseInt(number.trim());
+            int parsedNumber = Integer.parseInt(number.trim());
+            if (parsedNumber <= 1000) {
+                sum += parsedNumber;
+            }
         }
         return sum;
     }

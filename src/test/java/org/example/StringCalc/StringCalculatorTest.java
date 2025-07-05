@@ -82,4 +82,16 @@ public class StringCalculatorTest {
         assertEquals("negative numbers not allowed -2,-4", exception.getMessage());
     }
 
+    @Test
+    public void should_ignore_numbers_bigger_than_1000() {
+        int result = calculator.add("2,1001");
+        assertEquals(2, result);
+    }
+
+    @Test
+    public void should_ignore_multiple_numbers_bigger_than_1000() {
+        int result = calculator.add("1,2,1001,1002,3");
+        assertEquals(6, result);
+    }
+
 }
