@@ -1,5 +1,8 @@
 package org.example.StringCalc;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class StringCalculator {
     public int add(String numbers){
         if(isEmpty(numbers)){
@@ -41,11 +44,22 @@ public class StringCalculator {
     }
 
     private int calculateSum(String[] numberArray){
+        validateNoNegativeNumber(numberArray);
         int sum = 0;
         for(String number : numberArray){
             sum += Integer.parseInt(number);
         }
         return sum;
+    }
+
+    private void validateNoNegativeNumber(String[] numberArray){
+        for(String number : numberArray){
+            int parsedNumber = Integer.parseInt(number.trim());
+            if (parsedNumber < 0) {
+                throw new IllegalArgumentException("negative numbers not allowed " + parsedNumber);
+            }
+        }
+
     }
 
     private static class DelimiterInfo {
