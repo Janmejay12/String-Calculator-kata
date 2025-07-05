@@ -112,4 +112,16 @@ public class StringCalculatorTest {
         assertEquals(6, result);
     }
 
+    @Test
+    public void should_handle_multiple_long_delimiters() {
+        int result = calculator.add("//[***][%%%]\n1***2%%%3");
+        assertEquals(6, result);
+    }
+
+    @Test
+    public void should_handle_multiple_delimiters_with_special_chars() {
+        int result = calculator.add("//[!!][@@]\n1!!2@@3");
+        assertEquals(6, result);
+    }
+
 }
