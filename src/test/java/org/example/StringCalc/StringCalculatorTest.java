@@ -4,15 +4,16 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class StringCalculatorTest {
+
+    StringCalculator calculator = new StringCalculator();
+
     @Test
     public void emptyStringReturnsZero(){
-        StringCalculator calculator = new StringCalculator();
         int result = calculator.add("");
         assertEquals(0, result);
     }
     @Test
     public void should_return_number_for_single_number(){
-        StringCalculator calculator = new StringCalculator();
         int result = calculator.add("1");
         assertEquals(1, result);
         result = calculator.add("9");
@@ -23,21 +24,18 @@ public class StringCalculatorTest {
 
     @Test
     public void should_return_sum_for_two_numbers(){
-        StringCalculator calculator = new StringCalculator();
         int result = calculator.add("1,9");
         assertEquals(10, result);
     }
 
     @Test
     public void should_return_sum_for_multiple_numbers(){
-        StringCalculator calculator = new StringCalculator();
         int result = calculator.add("1,2,3,4,5");
         assertEquals(15, result);
     }
 
     @Test
     public void should_return_sum_for_various_multiple_numbers(){
-        StringCalculator calculator = new StringCalculator();
         int result = calculator.add("0,5,0");
         assertEquals(5, result);
         result = calculator.add("3,3,3");
@@ -46,25 +44,36 @@ public class StringCalculatorTest {
 
     @Test
     public void should_handle_newlines_between_numbers(){
-        StringCalculator calculator = new StringCalculator();
         int result = calculator.add("1,2\n3");
         assertEquals(6, result);
     }
 
     @Test
     public  void should_handle_custom_delimiter(){
-        StringCalculator calculator = new StringCalculator();
         int result = calculator.add("//;\n1;2");
         assertEquals(3, result);
     }
 
     @Test
+    public void should_handle_custom_delimiter_with_multiple_numbers() {
+        int result = calculator.add("//|\n1|2|3");
+        assertEquals(6, result);
+    }
+
+    @Test
     public void should_throw_exception_for_negative_number(){
-        StringCalculator calculator = new StringCalculator();
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
             calculator.add("1,-2,3");
         });
         assertEquals("negative numbers not allowed -2", exception.getMessage());
+    }
+
+    @Test
+    public void should_throw_exception_for_multiple_negative_numbers() {
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            calculator.add("1,-2,3,-4");
+        });
+        assertEquals("negative numbers not allowed -2,-4", exception.getMessage());
     }
 
 }

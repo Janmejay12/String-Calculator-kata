@@ -2,14 +2,21 @@ package org.example.StringCalc;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class StringCalculator {
+
+    private static final String DEFAULT_DELIMITER = ",|\n";
+    private static final String CUSTOM_DELIMITER_PREFIX = "//";
+    private static final String NEGATIVE_NUMBERS_NOT_ALLOWED = "negative numbers not allowed ";
+
     public int add(String numbers){
         if(isEmpty(numbers)){
             return 0;
         }
         DelimiterInfo delimiterInfo = extractDelimiterInfo(numbers);
         String[] parsedNumbers = parseNumbers(delimiterInfo.getNumbers(), delimiterInfo.getDelimiter());
+        validateNoNegativeNumbers(parsedNumbers);
         return calculateSum(parsedNumbers);
 
     }
@@ -21,30 +28,29 @@ public class StringCalculator {
         if (hasCustomDelimiter(numbers)) {
             return parseCustomDelimiter(numbers);
         }
-        return new DelimiterInfo(",|\n", numbers);
+        return new DelimiterInfo(DEFAULT_DELIMITER, numbers);
+    }
+
+    private boolean hasCustomDelimiter(String numbers) {
+        return (numbers.startsWith(CUSTOM_DELIMITER_PREFIX) && numbers.charAt(3) == '\n');
     }
 
     private DelimiterInfo parseCustomDelimiter(String numbers) {
         String[] parts = numbers.split("\n", 2);
-        String delimiter = parts[0].substring(2); // Remove "//"
+        String delimiter = Pattern.quote(parts[0].substring(2)); // Safe for regex
         String numbersPart = parts[1];
         return new DelimiterInfo(delimiter, numbersPart);
     }
 
-    private boolean hasCustomDelimiter(String numbers) {
-        return (numbers.startsWith("//") && numbers.charAt(3) == '\n');
-    }
-
-
-    private String[] parseNumbers(String numbers, String delimeter){
+    private String[] parseNumbers(String numbers, String delimiter){
         if (numbers.startsWith(",") || numbers.startsWith("\n") || numbers.endsWith(",") || numbers.endsWith("\n")) {
-            throw new IllegalArgumentException("Input cannot end with a delimiter");
+            throw new IllegalArgumentException("Input cannot start or end with a delimiter");
         }
-        return numbers.split(delimeter);
+
+        return numbers.split(delimiter);
     }
 
     private int calculateSum(String[] numberArray){
-        validateNoNegativeNumber(numberArray);
         int sum = 0;
         for(String number : numberArray){
             sum += Integer.parseInt(number);
@@ -52,14 +58,22 @@ public class StringCalculator {
         return sum;
     }
 
-    private void validateNoNegativeNumber(String[] numberArray){
-        for(String number : numberArray){
+    private void validateNoNegativeNumbers(String[] numberArray){
+        List<String> negativeNumbers = collectNegativeNumbers(numberArray);
+        if (!negativeNumbers.isEmpty()) {
+            throw new IllegalArgumentException(NEGATIVE_NUMBERS_NOT_ALLOWED + String.join(",", negativeNumbers));
+        }
+    }
+
+    private List<String> collectNegativeNumbers(String[] numberArray) {
+        List<String> negativeNumbers = new ArrayList<>();
+        for (String number : numberArray) {
             int parsedNumber = Integer.parseInt(number.trim());
             if (parsedNumber < 0) {
-                throw new IllegalArgumentException("negative numbers not allowed " + parsedNumber);
+                negativeNumbers.add(number.trim());
             }
         }
-
+        return negativeNumbers;
     }
 
     private static class DelimiterInfo {
