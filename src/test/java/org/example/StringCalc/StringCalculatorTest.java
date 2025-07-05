@@ -95,6 +95,12 @@ public class StringCalculatorTest {
     }
 
     @Test
+    public void should_handle_multiple_single_char_delimiters() {
+        int result = calculator.add("//[*][%]\n1*2%3");
+        assertEquals(6, result);
+    }
+
+    @Test
     public void should_handle_delimiter_of_any_length() {
         int result = calculator.add("//[***]\n1***2***3");
         assertEquals(6, result);
@@ -105,6 +111,5 @@ public class StringCalculatorTest {
         int result = calculator.add("//[!!@]\n1!!@2!!@3");
         assertEquals(6, result);
     }
-
 
 }
