@@ -44,5 +44,11 @@ public class StringCalculatorTest {
         assertEquals(9, result);
     }
 
+    @Test
+    public void should_handle_newlines_between_numbers(){
+        StringCalculator calculator = new StringCalculator();
+        int result = calculator.add("1,2\n3");
+        assertEquals(6, result);
+    }
 
 }

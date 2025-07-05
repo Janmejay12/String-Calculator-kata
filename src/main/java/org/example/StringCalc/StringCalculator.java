@@ -14,7 +14,10 @@ public class StringCalculator {
     }
 
     private String[] parseNumbers(String numbers){
-        return numbers.split(",");
+        if (numbers.startsWith(",") || numbers.startsWith("\n") || numbers.endsWith(",") || numbers.endsWith("\n")) {
+            throw new IllegalArgumentException("Input cannot end with a delimiter");
+        }
+        return numbers.split(",|\n");
     }
 
     private int calculateSum(String[] numberArray){
