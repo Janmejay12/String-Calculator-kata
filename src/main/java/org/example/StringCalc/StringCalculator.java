@@ -9,7 +9,10 @@ public class StringCalculator {
     private static final String DEFAULT_DELIMITER = ",|\n";
     private static final String CUSTOM_DELIMITER_PREFIX = "//";
     private static final String NEGATIVE_NUMBERS_NOT_ALLOWED = "negative numbers not allowed ";
-
+    private static final int MAX_ALLOWED_NUMBER = 1000;
+    private static final String DELIMITER_SEPARATOR = "|";
+    private static final char BRACKET_OPEN = '[';
+    private static final char BRACKET_CLOSE = ']';
     /**
      * Calculates the sum of numbers from a comma-separated string.
      * Supports custom delimiters and validates against negative numbers.
@@ -67,8 +70,8 @@ public class StringCalculator {
         int start = 0;
 
         while (start < delimiterPart.length()) {
-            int openBracket = delimiterPart.indexOf('[', start);
-            int closeBracket = delimiterPart.indexOf(']', openBracket);
+            int openBracket = delimiterPart.indexOf(BRACKET_OPEN, start);
+            int closeBracket = delimiterPart.indexOf(BRACKET_CLOSE, openBracket);
 
             if (openBracket == -1 || closeBracket == -1) {
                 break;
@@ -79,7 +82,7 @@ public class StringCalculator {
             start = closeBracket + 1;
         }
 
-        return String.join("|", delimiters);
+        return String.join(DELIMITER_SEPARATOR, delimiters);
     }
 
     private String[] parseNumbers(String numbers, String delimiter) {
@@ -108,7 +111,7 @@ public class StringCalculator {
         int sum = 0;
         for (String number : numberArray) {
             int parsedNumber = Integer.parseInt(number.trim());
-            if (parsedNumber <= 1000) {
+            if (parsedNumber <= MAX_ALLOWED_NUMBER) {
                 sum += parsedNumber;
             }
         }
