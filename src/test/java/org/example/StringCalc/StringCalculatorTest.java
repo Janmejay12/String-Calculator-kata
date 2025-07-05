@@ -61,6 +61,12 @@ public class StringCalculatorTest {
     }
 
     @Test
+    public void should_handle_regex_special_character_delimiter() {
+        int result = calculator.add("//+\n1+2+3");
+        assertEquals(6, result);
+    }
+
+    @Test
     public void should_throw_exception_for_negative_number(){
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
             calculator.add("1,-2,3");
