@@ -10,6 +10,15 @@ public class StringCalculator {
     private static final String CUSTOM_DELIMITER_PREFIX = "//";
     private static final String NEGATIVE_NUMBERS_NOT_ALLOWED = "negative numbers not allowed ";
 
+    /**
+     * Calculates the sum of numbers from a comma-separated string.
+     * Supports custom delimiters and validates against negative numbers.
+     *
+     * @param numbers the input string containing numbers
+     * @return the sum of all numbers
+     * @throws IllegalArgumentException if negative numbers are provided
+     */
+
     public int add(String numbers) {
         if (isEmpty(numbers)) {
             return 0;
@@ -38,9 +47,39 @@ public class StringCalculator {
 
     private DelimiterInfo parseCustomDelimiter(String numbers) {
         String[] parts = numbers.split("\n", 2);
-        String delimiter = Pattern.quote(parts[0].substring(2)); // Escape delimiter for regex
+        String delimiterPart = parts[0].substring(2); // Remove "//"
         String numbersPart = parts[1];
+
+        String delimiter;
+        if (delimiterPart.startsWith("[")) {
+            // Handle bracketed delimiter format: //[delimiter]\n or //[delim1][delim2]\n
+            delimiter = parseMultipleDelimiters(delimiterPart);
+        } else {
+            // Handle simple delimiter format: //delimiter\n
+            delimiter = Pattern.quote(delimiterPart);
+        }
+
         return new DelimiterInfo(delimiter, numbersPart);
+    }
+
+    private String parseMultipleDelimiters(String delimiterPart) {
+        List<String> delimiters = new ArrayList<>();
+        int start = 0;
+
+        while (start < delimiterPart.length()) {
+            int openBracket = delimiterPart.indexOf('[', start);
+            int closeBracket = delimiterPart.indexOf(']', openBracket);
+
+            if (openBracket == -1 || closeBracket == -1) {
+                break;
+            }
+
+            String delimiter = delimiterPart.substring(openBracket + 1, closeBracket);
+            delimiters.add(Pattern.quote(delimiter));
+            start = closeBracket + 1;
+        }
+
+        return String.join("|", delimiters);
     }
 
     private String[] parseNumbers(String numbers, String delimiter) {

@@ -94,4 +94,17 @@ public class StringCalculatorTest {
         assertEquals(6, result);
     }
 
+    @Test
+    public void should_handle_delimiter_of_any_length() {
+        int result = calculator.add("//[***]\n1***2***3");
+        assertEquals(6, result);
+    }
+
+    @Test
+    public void should_handle_long_delimiter_with_special_characters() {
+        int result = calculator.add("//[!!@]\n1!!@2!!@3");
+        assertEquals(6, result);
+    }
+
+
 }
