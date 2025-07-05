@@ -5,7 +5,8 @@ public class StringCalculator {
         if(isEmpty(numbers)){
             return 0;
         }
-        String[] parsedNumbers = parseNumbers(numbers);
+        DelimiterInfo delimiterInfo = extractDelimiterInfo(numbers);
+        String[] parsedNumbers = parseNumbers(delimiterInfo.getNumbers(), delimiterInfo.getDelimiter());
         return calculateSum(parsedNumbers);
 
     }
@@ -13,11 +14,30 @@ public class StringCalculator {
         return numbers.isEmpty();
     }
 
-    private String[] parseNumbers(String numbers){
+    private DelimiterInfo extractDelimiterInfo(String numbers) {
+        if (hasCustomDelimiter(numbers)) {
+            return parseCustomDelimiter(numbers);
+        }
+        return new DelimiterInfo(",|\n", numbers);
+    }
+
+    private DelimiterInfo parseCustomDelimiter(String numbers) {
+        String[] parts = numbers.split("\n", 2);
+        String delimiter = parts[0].substring(2); // Remove "//"
+        String numbersPart = parts[1];
+        return new DelimiterInfo(delimiter, numbersPart);
+    }
+
+    private boolean hasCustomDelimiter(String numbers) {
+        return (numbers.startsWith("//") && numbers.charAt(3) == '\n');
+    }
+
+
+    private String[] parseNumbers(String numbers, String delimeter){
         if (numbers.startsWith(",") || numbers.startsWith("\n") || numbers.endsWith(",") || numbers.endsWith("\n")) {
             throw new IllegalArgumentException("Input cannot end with a delimiter");
         }
-        return numbers.split(",|\n");
+        return numbers.split(delimeter);
     }
 
     private int calculateSum(String[] numberArray){
@@ -26,5 +46,23 @@ public class StringCalculator {
             sum += Integer.parseInt(number);
         }
         return sum;
+    }
+
+    private static class DelimiterInfo {
+        private final String delimiter;
+        private final String numbers;
+
+        public DelimiterInfo(String delimiter, String numbers) {
+            this.delimiter = delimiter;
+            this.numbers = numbers;
+        }
+
+        public String getDelimiter() {
+            return delimiter;
+        }
+
+        public String getNumbers() {
+            return numbers;
+        }
     }
 }

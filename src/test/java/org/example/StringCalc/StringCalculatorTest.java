@@ -51,4 +51,11 @@ public class StringCalculatorTest {
         assertEquals(6, result);
     }
 
+    @Test
+    public  void should_handle_custom_delimiter(){
+        StringCalculator calculator = new StringCalculator();
+        int result = calculator.add("//;\n1;2");
+        assertEquals(3, result);
+    }
+
 }
